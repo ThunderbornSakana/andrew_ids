@@ -13,7 +13,7 @@ from models.tabtransformer import TabTransformer
 torch.manual_seed(88)
 np.random.seed(88)
 
-MODEL = "tabtransformer" # "mlp"
+MODEL = "mlp" # "mlp"
 GPU_IDX = 0
 
 nums = [
@@ -94,8 +94,8 @@ def main():
 
     if MODEL == "mlp":
         batch_size = 2560
-        num_epochs = 30
-        learning_rate = 0.003
+        num_epochs = 10
+        learning_rate = 0.001
         cat_embed_dim = 16
         hidden_dim = 128
         cat_dims = {col: train_df[col].nunique() for col in cats}
@@ -109,7 +109,7 @@ def main():
         num_layers = 2
         ffn_dim = 128
         mlp_hidden = 128
-        num_epochs = 30
+        num_epochs = 15
         batch_size = 2560
         learning_rate = 0.003
         cat_cardinalities = [int(train_df[col].nunique()) for col in cats]
