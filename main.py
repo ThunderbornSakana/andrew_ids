@@ -9,6 +9,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import roc_auc_score, f1_score
 from models.mlp import MLP
 from models.tabtransformer import TabTransformer
+from models.cnn import CNNModel
 
 torch.manual_seed(88)
 np.random.seed(88)
@@ -121,10 +122,27 @@ def main():
                                ffn_dim=ffn_dim, 
                                mlp_hidden=mlp_hidden).to(device)
 
+
+    elif MODEL == "cnn":
+        batch_size = 2560
+        num_epochs = 10
+        learning_rate = 0.001
+        cat_embed_dim = 16
+        hidden_dim = 128
+        cat_dims = {col: train_df[col].nunique() for col in cats}
+
+        model = CNNModel(
+            num_numeric_features=len(nums),
+            cat_dims=cat_dims,
+            cat_embed_dim=cat_embed_dim,
+            hidden_dim=hidden_dim
+        ).to(device)
+
     train_dataset = KDDDataset(train_df, nums, cats, label_col='target')
     test_dataset = KDDDataset(test_df, nums, cats, label_col='target')
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
+
 
     criterion = nn.BCELoss()
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
